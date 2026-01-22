@@ -16,5 +16,5 @@ require("lazy").setup({
   require("plugins.treesitter"),
   require("plugins.cmp"),
   require("plugins.ui"),
-  require("plugins.codeium"),
+  require("plugins.copilot"),
 })
