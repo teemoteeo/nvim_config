@@ -15,6 +15,9 @@ require("lazy").setup({
   require("plugins.lualine"),
   require("plugins.treesitter"),
   require("plugins.cmp"),
+  require("plugins.lsp"),
   require("plugins.ui"),
   require("plugins.copilot"),
+  require("plugins.claude"),
+  require("plugins.toggleterm"),
 })

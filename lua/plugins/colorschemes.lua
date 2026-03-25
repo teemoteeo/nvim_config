@@ -10,7 +10,7 @@ return {
         commentStyle = { italic = true },
         keywordStyle = { italic = true },
         statementStyle = { bold = true },
-        transparent = true,
+        transparent = false,
         dimInactive = false,
         terminalColors = true,
         theme = "dragon",

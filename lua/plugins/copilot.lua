@@ -10,9 +10,9 @@ return {
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = "<Tab>",
+            accept = "<C-y>",
             accept_word = false,
-            accept_line = false,
+            accept_line = "<C-l>",
             next = "<M-]>",
             prev = "<M-[>",
             dismiss = "<C-]>",
@@ -41,31 +41,15 @@ return {
           ["."] = false,
         },
       })
+
+      local suggestion = require("copilot.suggestion")
+      vim.keymap.set("i", "<C-Right>", function()
+        if suggestion.is_visible() then
+          suggestion.accept_word()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-Right>", true, false, true), "n", false)
+        end
+      end, { silent = true, desc = "Copilot accept word" })
     end,
-  },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "canary",
-    dependencies = {
-      { "zbirenbaum/copilot.lua" },
-      { "nvim-lua/plenary.nvim" },
-    },
-    config = function()
-      require("CopilotChat").setup({
-        debug = false,
-        window = {
-          layout = "vertical",
-          width = 0.4,
-        },
-      })
-    end,
-    keys = {
-      { "<leader>cc", ":CopilotChatToggle<CR>", desc = "Toggle Copilot Chat" },
-      { "<leader>ce", ":CopilotChatExplain<CR>", mode = "v", desc = "Explain code" },
-      { "<leader>cf", ":CopilotChatFix<CR>", mode = "v", desc = "Fix code" },
-      { "<leader>co", ":CopilotChatOptimize<CR>", mode = "v", desc = "Optimize code" },
-      { "<leader>ct", ":CopilotChatTests<CR>", mode = "v", desc = "Generate tests" },
-      { "<leader>cq", ":CopilotChatReset<CR>", desc = "Reset chat" },
-    },
   },
 }
