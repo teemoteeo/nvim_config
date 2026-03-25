@@ -1,0 +1,14 @@
+# Ignora backup
+*.bak
+*.swp
+*~
+
+# Ignora file di sistema (macOS/Linux)
+.DS_Store
+.netrwhist
+
+/CLAUDE.md
+/.claude
+
+# Opzionale: se usi una cartella locale per dati non versionati
+/lazy-lock.json.old
