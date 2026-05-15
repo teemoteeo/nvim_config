@@ -16,7 +16,7 @@ Personal Neovim configuration built with [lazy.nvim](https://github.com/folke/la
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/nvim-config ~/.config/nvim
+git clone https://github.com/teemoteeo/nvim_config ~/.config/nvim
 nvim  # lazy.nvim auto-installs plugins on first launch
 ```
 
