@@ -1,0 +1,15 @@
+return {
+  {
+    "mg979/vim-visual-multi",
+    branch = "master",
+    init = function()
+      vim.g.VM_maps = {
+        ["Find Under"] = "<C-d>",
+        ["Find Subword Under"] = "<C-d>",
+        ["Visual Find"] = "<C-d>",
+        ["Single Select l"] = "",
+        ["Single Select h"] = "",
+      }
+    end,
+  },
+}
