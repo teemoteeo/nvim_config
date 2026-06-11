@@ -305,6 +305,7 @@ vim.api.nvim_create_user_command("Cheatsheet", function()
       { "M-t",           "toggle terminal (all modes)" },
       { "M-v",           "toggle venv" },
       { "M-c",           "Claude terminal" },
+      { "M-i",           "Pi terminal" },
       { "M-f",           "find in buffer" },
       { ";",             "command mode" },
       { "jj (insert)",   "escape" },

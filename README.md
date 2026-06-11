@@ -110,6 +110,7 @@ nvim  # lazy.nvim auto-installs plugins on first launch
 | `Alt+T` | Normal, Insert, Visual, Terminal | Toggle floating terminal |
 | `Esc` | Terminal | Exit terminal mode |
 | `Alt+C` | Normal, Terminal | Toggle Claude Code terminal (persistent vsplit) |
+| `Alt+I` | Normal, Terminal | Toggle Pi terminal (persistent vsplit) |
 
 ### Build & Run
 
@@ -179,6 +180,12 @@ nvim  # lazy.nvim auto-installs plugins on first launch
 | `Alt+Enter` | Open panel |
 | `[[` / `]]` | Jump prev / next in panel |
 | `gr` | Refresh panel |
+
+### Outline
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `Alt+M` | Normal | Toggle aerial outline (right panel) |
 
 ### Telescope
 
