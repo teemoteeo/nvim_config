@@ -1,7 +1,7 @@
 return {
   {
     "stevearc/aerial.nvim",
-    branch = "nvim-0.11",
+    branch = vim.fn.has("nvim-0.12") == 0 and "nvim-0.11" or nil, -- 42 machines run nvim 0.11
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     keys = {
       { "<M-m>", "<cmd>AerialToggle right<CR>", desc = "Toggle aerial outline" },

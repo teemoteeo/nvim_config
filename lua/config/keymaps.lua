@@ -50,6 +50,14 @@ vim.keymap.set("i", "$e", '""<Left>', { desc = "Insert double quotes" })
 vim.keymap.set("n", "<M-s>", ":w<CR>", { desc = "Save file" })
 vim.keymap.set("i", "<M-s>", "<Esc>:w<CR>", { desc = "Save file" })
 
+-- Alt+Left/Right: word jump (macOS terminals send these as M-b / M-f)
+if vim.fn.has("mac") == 1 then
+  vim.keymap.set({ "n", "v" }, "<M-f>", "w", { desc = "Next word" })
+  vim.keymap.set({ "n", "v" }, "<M-b>", "b", { desc = "Previous word" })
+  vim.keymap.set("i", "<M-f>", "<C-o>w", { desc = "Next word" })
+  vim.keymap.set("i", "<M-b>", "<C-o>b", { desc = "Previous word" })
+end
+
 -- F2: Insert header (42 header for C, shebang for Python)
 function InsertHeader()
   local ft = vim.bo.filetype
@@ -274,7 +282,7 @@ vim.api.nvim_create_user_command("Cheatsheet", function()
       { "M-c",           "Claude terminal" },
       { "M-u",           "scroll up in Claude (i to return)" },
       { "M-i",           "Pi terminal" },
-      { "M-f",           "find in buffer" },
+      { vim.fn.has("mac") == 1 and "M-S-f" or "M-f", "find in buffer" },
       { "M-o",           "find files" },
       { "M-g",           "grep in project" },
       { ";",             "command mode" },

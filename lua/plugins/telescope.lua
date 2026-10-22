@@ -7,7 +7,8 @@ return {
       { "<M-o>", "<cmd>Telescope find_files<CR>", desc = "Find files" },
       { "<M-g>", "<cmd>Telescope live_grep<CR>", desc = "Grep in project" },
       {
-        "<M-f>",
+        -- M-f is word jump on macOS (see keymaps.lua)
+        vim.fn.has("mac") == 1 and "<M-F>" or "<M-f>",
         function()
           local state = require("telescope.state")
           local action_state = require("telescope.actions.state")
