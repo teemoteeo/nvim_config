@@ -1,43 +1,7 @@
 vim.keymap.set("n", ";", ":", { desc = "Quick command mode" })
 -- Terminal mode: hide terminal with Alt+D
--- Alt+V: Toggle Python venv activation in terminal 1
-local _venv_active = false
-
-local function find_venv_activate()
-  local cwd = vim.fn.getcwd()
-  for _, name in ipairs({ ".venv", "venv", "env" }) do
-    local path = cwd .. "/" .. name .. "/bin/activate"
-    if vim.fn.filereadable(path) == 1 then
-      return path
-    end
-  end
-end
-
-local function toggle_venv()
-  local terms = require("toggleterm.terminal")
-  local term = terms.get(1, true)
-  if not term or not term.job_id then
-    vim.notify("Open a terminal first (Alt+T)", vim.log.levels.WARN)
-    return
-  end
-  if _venv_active then
-    vim.fn.jobsend(term.job_id, "deactivate\n")
-    _venv_active = false
-    vim.notify("Venv deactivated", vim.log.levels.INFO)
-  else
-    local activate = find_venv_activate()
-    if not activate then
-      vim.notify("No venv found (.venv / venv / env)", vim.log.levels.WARN)
-      return
-    end
-    vim.fn.jobsend(term.job_id, "source " .. activate .. "\n")
-    _venv_active = true
-    vim.notify("Venv activated", vim.log.levels.INFO)
-  end
-end
-
-vim.keymap.set("n", "<M-v>", toggle_venv, { desc = "Toggle venv" })
-vim.keymap.set("t", "<M-v>", toggle_venv, { desc = "Toggle venv (terminal)" })
+-- Alt+V: vertical split
+vim.keymap.set("n", "<M-v>", "<cmd>vsplit<CR>", { desc = "Vertical split" })
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Quick escape" })
 vim.keymap.set("i", "<Space>", "<Space>", { noremap = true, desc = "Insert space immediately" })
 vim.keymap.set("n", "<A-n>", ":bnext<CR>", { desc = "Next buffer" })
@@ -212,7 +176,8 @@ function ToggleClaude()
     vim.cmd("vsplit")
     _claude_win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(_claude_win, _claude_buf)
-    vim.fn.termopen("claude", {
+    -- Fullscreen TUI keeps output off nvim's scrollback; use inline mode here so it can scroll
+    vim.fn.termopen({ "claude", "--settings", [[{"tui":"default"}]] }, {
       on_exit = function()
         _claude_buf = nil
         _claude_win = nil
@@ -221,6 +186,9 @@ function ToggleClaude()
     _claude_buf = vim.api.nvim_get_current_buf()
     -- Let Esc pass through to Claude instead of exiting terminal mode
     vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = _claude_buf, desc = "Pass Esc to Claude" })
+    -- Esc is taken, so give scrollback its own way out of terminal mode (i/a to return)
+    vim.keymap.set("t", "<M-u>", "<C-\\><C-n><C-u>", { buffer = _claude_buf, desc = "Scroll Claude output up" })
+    vim.keymap.set("t", "<ScrollWheelUp>", "<C-\\><C-n><ScrollWheelUp>", { buffer = _claude_buf, desc = "Scroll Claude output up" })
   else
     -- Buffer alive, just show it in a new split
     vim.cmd("vsplit")
@@ -296,17 +264,19 @@ vim.api.nvim_create_user_command("Cheatsheet", function()
       { "M-n / M-p",     "next / prev buffer" },
       { "M-w",           "close buffer" },
       { "M-a",           "next window" },
-      { "M-v",           "toggle venv" },
+      { "M-v",           "vertical split" },
       { "M-z",           "toggle fullscreen" },
     }},
     { "Tools", {
       { "M-e",           "file explorer" },
       { "M-m",           "outline (aerial)" },
       { "M-t",           "toggle terminal (all modes)" },
-      { "M-v",           "toggle venv" },
       { "M-c",           "Claude terminal" },
+      { "M-u",           "scroll up in Claude (i to return)" },
       { "M-i",           "Pi terminal" },
       { "M-f",           "find in buffer" },
+      { "M-o",           "find files" },
+      { "M-g",           "grep in project" },
       { ";",             "command mode" },
       { "jj (insert)",   "escape" },
     }},
@@ -381,3 +351,23 @@ end
 vim.keymap.set("n", "<M-z>", toggle_fullscreen, { desc = "Toggle fullscreen window" })
 vim.keymap.set("t", "<M-z>", toggle_fullscreen, { desc = "Toggle fullscreen window (from terminal)" })
 vim.keymap.set("i", "<M-z>", toggle_fullscreen, { desc = "Toggle fullscreen window (from insert)" })
+
+-- Click line number of a function/class first line to fold it; elsewhere normal click
+vim.keymap.set("n", "<LeftMouse>", function()
+  local pos = vim.fn.getmousepos()
+  local info = vim.fn.getwininfo(pos.winid)[1]
+  if pos.line > 0 and info and pos.wincol <= info.textoff then
+    local l = pos.line
+    -- only lines marked as function/class by mark_functions() in autocmds.lua
+    local ns = vim.api.nvim_create_namespace("fn_line_count")
+    local buf = vim.api.nvim_win_get_buf(pos.winid)
+    if #vim.api.nvim_buf_get_extmarks(buf, ns, { l - 1, 0 }, { l - 1, -1 }, {}) > 0 then
+      vim.api.nvim_set_current_win(pos.winid)
+      vim.api.nvim_win_set_cursor(pos.winid, { l, 0 })
+      vim.cmd("normal! za")
+      return
+    end
+  end
+  vim.api.nvim_feedkeys(vim.keycode("<LeftMouse>"), "n", false)
+end, { desc = "Toggle fold from line number" })
+

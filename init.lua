@@ -9,7 +9,6 @@ local function safe_source(path)
 end
 
 local config_dir = vim.fn.stdpath("config")
-safe_source(config_dir .. "/scripts/stdheader.vim")
 safe_source(config_dir .. "/scripts/gdb.vim")
 
 require("config.options")

@@ -1,5 +1,7 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  -- pinned: later commits require nvim 0.12 (vim.list.unique); unpin after upgrading nvim
+  commit = "4d9916e477e5d4e3b245845dfd285edf429f3252",
   build = ":TSUpdate",
   event = { "BufReadPost", "BufNewFile" },
   cmd = { "TSInstall", "TSUpdate", "TSInstallInfo" },

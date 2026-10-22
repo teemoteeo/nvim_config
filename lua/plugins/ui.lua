@@ -61,6 +61,8 @@ return {
     end,
   },
   { "luxvim/nvim-luxterm" },
+  -- Provides :Stdheader (reads g:user42 / g:mail42, falls back to $USER / $MAIL)
+  { "42paris/42header", cmd = "Stdheader" },
   {
     "brenton-leighton/multiple-cursors.nvim",
     version = "*",
